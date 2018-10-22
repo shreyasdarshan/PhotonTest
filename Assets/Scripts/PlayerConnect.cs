@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using System;
 
 public class PlayerConnect : MonoBehaviour {
 
@@ -23,7 +24,17 @@ public class PlayerConnect : MonoBehaviour {
 		PhotonNetwork.ConnectUsingSettings(version);
 		Debug.Log("Init connect");
 		initialStatusString = statusText.text;
-		statusText.text = initialStatusString + "Init connect";
+		statusText.text = initialStatusString + "Init connect";		
+	}
+
+	private void OnEnable()
+	{
+		SceneManager.sceneLoaded += HandleSceneLoaded;
+	}
+
+	private void OnDisable()
+	{
+		SceneManager.sceneLoaded -= HandleSceneLoaded;
 	}
 
 	private void OnConnectedToMaster()
@@ -47,15 +58,12 @@ public class PlayerConnect : MonoBehaviour {
 		PhotonNetwork.LoadLevel("Main");
 	}
 
-	private void OnLevelWasLoaded(int iLevel)
+	private void HandleSceneLoaded(Scene iSceneName, LoadSceneMode iMode)
 	{
-		Scene currentScene = SceneManager.GetSceneByBuildIndex(iLevel);
-		if(currentScene.name == "Main")
+		if (iSceneName.name == "Main")
 		{
 			Debug.Log("sd");
 			PhotonNetwork.Instantiate(playerPrefab.name, Camera.main.transform.position, Camera.main.transform.rotation, 0);
 		}
-	}
-
-
+	}	
 }
