@@ -8,11 +8,10 @@ public class ChangePlayerName : Photon.MonoBehaviour
 	//Change Player Name
 	[SerializeField] Text playerNameText;
 	GameObject photonManager;
-	PhotonView photonView;
 	// Use this for initialization
 	void Start()
 	{
-		photonView = transform.GetComponent<PhotonView>();
+		//photonView = transform.GetComponent<PhotonView>();
 		if (photonView.isMine)
 		{
 			photonManager = GameObject.Find("PhotonNetworkManager");

@@ -7,13 +7,13 @@ public class NetworkMovement : Photon.MonoBehaviour
 	[SerializeField] float positionLerpSpeed = 8f;
 	[SerializeField] float rotationLerpSpeed = 8f;
 
-	PhotonView photonView;
+	//PhotonView photonView;
 	private Vector3 correctPos;
 	private Quaternion correctRot;
 
 	private void Start()
 	{
-		photonView = transform.GetComponent<PhotonView>();
+		//photonView = transform.GetComponent<PhotonView>();
 	}
 
 	private void Update()

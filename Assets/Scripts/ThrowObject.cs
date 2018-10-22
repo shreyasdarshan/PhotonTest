@@ -55,13 +55,14 @@ public class ThrowObject : MonoBehaviour
 
 	void PickupObject()
 	{
-		var otherPhotonView = attachedObjectRigidbody.gameObject.GetComponent<PhotonView>();
-		if (otherPhotonView.ownerId != PhotonNetwork.player.ID)
-			otherPhotonView.TransferOwnership(PhotonNetwork.player.ID);					
-
 		if (attachedObjectRigidbody)
-			fixedJoint.connectedBody = attachedObjectRigidbody;
+		{
+			var otherPhotonView = attachedObjectRigidbody.gameObject.GetComponent<PhotonView>();
+			if (otherPhotonView.ownerId != PhotonNetwork.player.ID)
+				otherPhotonView.TransferOwnership(PhotonNetwork.player.ID);
 
+			fixedJoint.connectedBody = attachedObjectRigidbody;
+		}
 	}
 
 	void Throw()

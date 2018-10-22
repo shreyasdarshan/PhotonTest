@@ -8,13 +8,13 @@ public class NetworkPlayerMovement : Photon.MonoBehaviour
 	[SerializeField] float rotationLerpSpeed = 8f;
 
 	Transform camAttachPoint;
-	PhotonView photonView;
+	//PhotonView photonView;
 	private Vector3 correctPlayerPos;
 	private Quaternion correctPlayerRot;
 
 	private void Start()
 	{
-		photonView = transform.GetComponent<PhotonView>();
+		//photonView = transform.GetComponent<PhotonView>();
 		camAttachPoint = Camera.main.transform.GetChild(0);
 	}
 
@@ -36,16 +36,23 @@ public class NetworkPlayerMovement : Photon.MonoBehaviour
 	{
 		if (stream.isWriting)
 		{
-			// We own this player: send the others our data
-			stream.SendNext(transform.position);
-			stream.SendNext(transform.rotation);
+			if (!float.IsNaN(transform.position.x) && !float.IsNaN(transform.position.y) && !float.IsNaN(transform.position.z))
+				stream.SendNext(transform.position);
+
+			if (!float.IsNaN(transform.rotation.x) && !float.IsNaN(transform.rotation.y) && !float.IsNaN(transform.rotation.z) && !float.IsNaN(transform.rotation.w))
+				stream.SendNext(transform.rotation);
 
 		}
 		else
 		{
-			// Network player, receive data
-			this.correctPlayerPos = (Vector3)stream.ReceiveNext();
-			this.correctPlayerRot = (Quaternion)stream.ReceiveNext();
+			Vector3 receiveingPos = (Vector3)stream.ReceiveNext();
+			Quaternion receiveingRot = (Quaternion)stream.ReceiveNext();
+
+			if (!float.IsNaN(receiveingPos.x) && !float.IsNaN(receiveingPos.y) && !float.IsNaN(receiveingPos.z))
+				correctPlayerPos = receiveingPos;
+
+			if (!float.IsNaN(receiveingRot.x) && !float.IsNaN(receiveingRot.y) && !float.IsNaN(receiveingRot.z) && !float.IsNaN(receiveingRot.w))
+				correctPlayerRot = receiveingRot;
 		}
 	}
 }
