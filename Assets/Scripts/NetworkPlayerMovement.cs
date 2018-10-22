@@ -2,24 +2,27 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//Script to allow smooth player movement without any rigidbody
 public class NetworkPlayerMovement : Photon.MonoBehaviour
 {
+    //Smooth out movement
 	[SerializeField] float positionLerpSpeed = 8f;
 	[SerializeField] float rotationLerpSpeed = 8f;
 
 	Transform camAttachPoint;
-	//PhotonView photonView;
 	private Vector3 correctPlayerPos;
 	private Quaternion correctPlayerRot;
 
 	private void Start()
 	{
-		//photonView = transform.GetComponent<PhotonView>();
-		camAttachPoint = Camera.main.transform.GetChild(0);
+        //Get reference point based on vive headset camera
+        camAttachPoint = Camera.main.transform.GetChild(0);
 	}
 
 	private void Update()
 	{
+        //If local player, then set the transform data, else get it from the networked players
 		if (photonView.isMine)
 		{
 			transform.position = camAttachPoint.position;
@@ -32,8 +35,10 @@ public class NetworkPlayerMovement : Photon.MonoBehaviour
 		}
 	}
 
+    //Photon callback method for sending and receiving data stream
 	void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
 	{
+        //Check for errors and send or receive data
 		if (stream.isWriting)
 		{
 			if (!float.IsNaN(transform.position.x) && !float.IsNaN(transform.position.y) && !float.IsNaN(transform.position.z))
